@@ -33,7 +33,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white z-50">
             <SelectItem value="all">All Categories</SelectItem>
             {categories.map((category) => (
               <SelectItem key={category} value={category}>
@@ -50,7 +50,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white z-50">
             <SelectItem value="all">All Locations</SelectItem>
             {locations.map((location) => (
               <SelectItem key={location} value={location}>

@@ -6,7 +6,6 @@ export interface PriceEntry {
   price: number;
   currency: string;
   location: string;
-  country: string;
   comment?: string;
   submittedAt: Date;
   submittedBy: string;

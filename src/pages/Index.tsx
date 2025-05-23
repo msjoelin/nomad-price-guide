@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { PlusCircle, MapPin, Filter, DollarSign, Globe } from 'lucide-react';
+import { PlusCircle, MapPin, Filter, DollarSign, Globe, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,11 +8,12 @@ import AddPriceForm from '@/components/AddPriceForm';
 import PriceList from '@/components/PriceList';
 import FilterBar from '@/components/FilterBar';
 import AveragesPView from '@/components/AveragesPView';
+import MapView from '@/components/MapView';
 import { PriceEntry } from '@/types/PriceEntry';
 
 const Index = () => {
   const [showAddForm, setShowAddForm] = useState(false);
-  const [activeView, setActiveView] = useState<'list' | 'averages'>('list');
+  const [activeView, setActiveView] = useState<'list' | 'averages' | 'map'>('list');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
   const [priceEntries, setPriceEntries] = useState<PriceEntry[]>([
@@ -22,8 +23,7 @@ const Index = () => {
       itemName: 'Street Tacos',
       price: 2.50,
       currency: 'USD',
-      location: 'Mexico City',
-      country: 'Mexico',
+      location: 'Mexico City, Mexico',
       comment: 'Amazing al pastor tacos from street vendor',
       submittedAt: new Date('2024-01-15'),
       submittedBy: 'Alex'
@@ -34,8 +34,7 @@ const Index = () => {
       itemName: 'Taxi (10km)',
       price: 8.00,
       currency: 'USD',
-      location: 'Bangkok',
-      country: 'Thailand',
+      location: 'Bangkok, Thailand',
       comment: 'Meter taxi, no traffic',
       submittedAt: new Date('2024-01-10'),
       submittedBy: 'Sarah'
@@ -46,8 +45,7 @@ const Index = () => {
       itemName: 'Coffee',
       price: 1.20,
       currency: 'USD',
-      location: 'Lisbon',
-      country: 'Portugal',
+      location: 'Lisbon, Portugal',
       comment: 'Espresso at local cafe',
       submittedAt: new Date('2024-01-12'),
       submittedBy: 'Marco'
@@ -114,7 +112,7 @@ const Index = () => {
               <div className="flex items-center">
                 <MapPin className="h-8 w-8 text-blue-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Cities Covered</p>
+                  <p className="text-sm font-medium text-gray-600">Locations Covered</p>
                   <p className="text-2xl font-bold text-gray-900">{locations.length}</p>
                 </div>
               </div>
@@ -156,24 +154,35 @@ const Index = () => {
           >
             Price Averages
           </button>
+          <button
+            onClick={() => setActiveView('map')}
+            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              activeView === 'map' 
+                ? 'bg-white text-blue-600 shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Map className="h-4 w-4 mr-1 inline" />
+            Map View
+          </button>
         </div>
 
         {/* Filters */}
-        <FilterBar
-          categories={categories}
-          locations={locations}
-          selectedCategory={selectedCategory}
-          selectedLocation={selectedLocation}
-          onCategoryChange={setSelectedCategory}
-          onLocationChange={setSelectedLocation}
-        />
+        {activeView !== 'map' && (
+          <FilterBar
+            categories={categories}
+            locations={locations}
+            selectedCategory={selectedCategory}
+            selectedLocation={selectedLocation}
+            onCategoryChange={setSelectedCategory}
+            onLocationChange={setSelectedLocation}
+          />
+        )}
 
         {/* Content */}
-        {activeView === 'list' ? (
-          <PriceList entries={filteredEntries} />
-        ) : (
-          <AveragesPView entries={priceEntries} />
-        )}
+        {activeView === 'list' && <PriceList entries={filteredEntries} />}
+        {activeView === 'averages' && <AveragesPView entries={priceEntries} />}
+        {activeView === 'map' && <MapView entries={priceEntries} />}
 
         {/* Add Price Modal */}
         {showAddForm && (

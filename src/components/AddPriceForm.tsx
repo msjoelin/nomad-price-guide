@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PriceEntry } from '@/types/PriceEntry';
+import LocationInput from './LocationInput';
 
 interface AddPriceFormProps {
   onSubmit: (entry: Omit<PriceEntry, 'id' | 'submittedAt'>) => void;
@@ -19,37 +20,43 @@ const categories = [
 ];
 
 const currencies = [
-  'USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK', 'NZD'
+  'USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK', 'NZD', 'MXN', 'THB', 'TRY', 'MAD', 'ARS', 'INR', 'BRL', 'AED', 'SGD', 'HKD', 'KRW', 'CZK', 'HUF'
 ];
 
 const AddPriceForm: React.FC<AddPriceFormProps> = ({ onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
+    location: '',
     category: '',
     itemName: '',
     price: '',
     currency: 'USD',
-    location: '',
-    country: '',
     comment: '',
     submittedBy: 'Anonymous'
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.category || !formData.itemName || !formData.price || !formData.location || !formData.country) {
+    if (!formData.location || !formData.category || !formData.itemName || !formData.price) {
       return;
     }
 
     onSubmit({
+      location: formData.location,
       category: formData.category,
       itemName: formData.itemName,
       price: parseFloat(formData.price),
       currency: formData.currency,
-      location: formData.location,
-      country: formData.country,
       comment: formData.comment,
       submittedBy: formData.submittedBy
     });
+  };
+
+  const handleLocationChange = (location: string, currency?: string) => {
+    setFormData(prev => ({
+      ...prev,
+      location,
+      ...(currency && { currency })
+    }));
   };
 
   return (
@@ -68,6 +75,12 @@ const AddPriceForm: React.FC<AddPriceFormProps> = ({ onSubmit, onClose }) => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <LocationInput
+              value={formData.location}
+              onChange={handleLocationChange}
+              placeholder="e.g., Bangkok, Thailand"
+            />
+
             <div>
               <Label htmlFor="category">Category *</Label>
               <Select onValueChange={(value) => setFormData({ ...formData, category: value })}>
@@ -108,7 +121,10 @@ const AddPriceForm: React.FC<AddPriceFormProps> = ({ onSubmit, onClose }) => {
               </div>
               <div>
                 <Label htmlFor="currency">Currency</Label>
-                <Select onValueChange={(value) => setFormData({ ...formData, currency: value })} defaultValue="USD">
+                <Select 
+                  value={formData.currency}
+                  onValueChange={(value) => setFormData({ ...formData, currency: value })}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -121,26 +137,6 @@ const AddPriceForm: React.FC<AddPriceFormProps> = ({ onSubmit, onClose }) => {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-
-            <div>
-              <Label htmlFor="location">City *</Label>
-              <Input
-                id="location"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                placeholder="e.g., Bangkok, Mexico City"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="country">Country *</Label>
-              <Input
-                id="country"
-                value={formData.country}
-                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                placeholder="e.g., Thailand, Mexico"
-              />
             </div>
 
             <div>

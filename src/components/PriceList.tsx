@@ -42,7 +42,7 @@ const PriceList: React.FC<PriceListProps> = ({ entries }) => {
                 
                 <div className="flex items-center text-sm text-gray-600 mb-2">
                   <MapPin className="h-4 w-4 mr-1" />
-                  <span>{entry.location}, {entry.country}</span>
+                  <span>{entry.location}</span>
                 </div>
                 
                 {entry.comment && (

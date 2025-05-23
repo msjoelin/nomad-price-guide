@@ -24,7 +24,6 @@ const AveragesPView: React.FC<AveragesPViewProps> = ({ entries }) => {
 
     const averages: Array<{
       location: string;
-      country: string;
       category: string;
       averagePrice: number;
       currency: string;
@@ -36,11 +35,9 @@ const AveragesPView: React.FC<AveragesPViewProps> = ({ entries }) => {
         const totalPrice = categoryEntries.reduce((sum, entry) => sum + entry.price, 0);
         const averagePrice = totalPrice / categoryEntries.length;
         const currency = categoryEntries[0].currency; // Assume same currency for simplicity
-        const country = categoryEntries[0].country;
         
         averages.push({
           location,
-          country,
           category,
           averagePrice,
           currency,
@@ -77,7 +74,7 @@ const AveragesPView: React.FC<AveragesPViewProps> = ({ entries }) => {
         <Card key={location}>
           <CardHeader>
             <CardTitle className="text-xl text-gray-900">
-              {location}, {locationAverages[0].country}
+              {location}
             </CardTitle>
           </CardHeader>
           <CardContent>
